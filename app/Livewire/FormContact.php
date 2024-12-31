@@ -44,6 +44,10 @@ class FormContact extends Component
         if($result->wasRecentlyCreated) {
             $this->reset();
             $this->success = "Contact created successfully.";
+
+            //create an event
+            $this->dispatch('contactAdded');
+
         }else {
             $this->error = "Contact already exists";
         }
