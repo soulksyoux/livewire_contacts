@@ -18,18 +18,11 @@ class FormContact extends Component
     #[Validate(['required', 'min:5', 'max:20'])]
     public $phone;
 
-    public $error = "";
-    public $success = "";
+
 
     public function newContact() {
 
         $this->validate();
-
-        // $this->validate([
-        //     'name' => ['required', 'min:3', 'max:50'],
-        //     'email' => ['required', 'email', 'min:5', 'max:50'],
-        //     'phone' => ['required', 'min:5', 'max:20'],
-        // ]);
 
         $result = Contact::firstOrCreate(
             [
@@ -43,13 +36,24 @@ class FormContact extends Component
 
         if($result->wasRecentlyCreated) {
             $this->reset();
-            $this->success = "Contact created successfully.";
 
             //create an event
             $this->dispatch('contactAdded');
+            $this->dispatch(
+                'notification',
+                type: 'success',
+                title: 'Contact created successfully.',
+                position: 'center'
+            );
 
         }else {
-            $this->error = "Contact already exists";
+
+            $this->dispatch(
+                'notification',
+                type: 'error',
+                title: 'Contact already exists.',
+                position: 'center'
+            );
         }
 
 
